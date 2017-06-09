@@ -1,5 +1,7 @@
 *.pyc
 *.eggs
 *.egg-info
+.tox
+dist
 postactivate
 venv
