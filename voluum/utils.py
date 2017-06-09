@@ -1,4 +1,18 @@
-from urllib.parse import quote_plus
+try:
+    from urllib.parse import quote_plus
+except ImportError:
+    # python 2.7
+    from urllib import quote_plus
+
+
+class VoluumException(Exception):
+    def __init__(self, status_code, text):
+        self.status_code = status_code
+        self.text = text
+
+    def __str__(self):
+        return '{0}: {1}'.format(
+            self.status_code, self.text)
 
 
 def build_query_str(columns):

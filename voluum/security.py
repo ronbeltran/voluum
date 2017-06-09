@@ -1,15 +1,7 @@
 import json
 import requests
 
-
-class SecurityException(Exception):
-    def __init__(self, status_code, text):
-        self.status_code = status_code
-        self.text = text
-
-    def __str__(self):
-        return '{0}: {1}'.format(
-            self.status_code, self.text)
+from voluum.utils import VoluumException
 
 
 class Security:
@@ -38,7 +30,7 @@ class Security:
             url, data=json.dumps(data), headers=self.headers())
 
         if resp.status_code != 200:
-            raise SecurityException(resp.status_code, resp.text)
+            raise VoluumException(resp.status_code, resp.text)
 
         return resp.json()
 
@@ -56,7 +48,7 @@ class Security:
         resp = requests.get(url, headers=headers)
 
         if resp.status_code != 200:
-            raise SecurityException(resp.status_code, resp.text)
+            raise VoluumException(resp.status_code, resp.text)
 
         return resp.json()
 
@@ -74,6 +66,6 @@ class Security:
         resp = requests.delete(url, headers=headers)
 
         if resp.status_code != 200:
-            raise SecurityException(resp.status_code, resp.text)
+            raise VoluumException(resp.status_code, resp.text)
 
         return resp.text
