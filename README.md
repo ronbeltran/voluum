@@ -5,6 +5,6 @@
 
 ## Run the tests
 
-    pip install nose
-    pip install tox
+    pip install -e .
+    pip install -r requirements-test.txt
     tox
