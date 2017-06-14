@@ -4,6 +4,9 @@ except ImportError:
     # python 2.7
     from urllib import quote_plus
 
+VOLUUM_EMAIL = 'user@example.com'
+VOLUUM_PASSWORD = 'notasecret'
+
 
 class VoluumException(Exception):
     def __init__(self, status_code, text):
