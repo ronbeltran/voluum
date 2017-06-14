@@ -1,3 +1,5 @@
+[![CI Build Status](https://travis-ci.org/ronbeltran/voluum.svg?branch=master)](https://travis-ci.org/ronbeltran/voluum)
+
 # Python Client for Voluum API 
 
 https://developers.voluum.com/
