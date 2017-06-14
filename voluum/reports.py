@@ -60,8 +60,6 @@ class Reports:
 
         resp = requests.get(url, params=params, headers=self.headers())
 
-        print(resp.content)
-
         if resp.status_code != 200:
             raise VoluumException(resp.status_code, resp.text)
 

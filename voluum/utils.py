@@ -39,6 +39,9 @@ def round_time(dt=None, round_to=60):
     """
     Round datetime object to nearest hour
     https://stackoverflow.com/questions/3463930
+    Result datetime should be formatted like below
+    before sending to Voluum  API
+        round_time(self.to_date).strftime('%Y-%m-%dT%H')
     """
     if dt is None:
         dt = datetime.now()
