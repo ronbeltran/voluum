@@ -2,7 +2,7 @@ import os
 import unittest
 
 from voluum.security import Security
-from voluum.security import SecurityException
+from voluum.utils import VoluumException
 
 
 class SecurityTestCase(unittest.TestCase):
@@ -20,7 +20,7 @@ class SecurityTestCase(unittest.TestCase):
         self.assertIn('expirationTimestamp', resp)
 
     def test_get_token_wrong_credentials(self):
-        with self.assertRaises(SecurityException):
+        with self.assertRaises(VoluumException):
             resp = self.security2.get_token()
             self.assertIsNotNone(resp)
 
