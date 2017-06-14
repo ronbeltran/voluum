@@ -2,12 +2,7 @@
 
 https://developers.voluum.com/
 
-## Setup voluum credentials via environment
-
-    export VOLUUM_EMAIL=''
-    export VOLUUM_PASSWORD=''
-
-## Run the tests
+## Run the tests (make sure you're inside a virtualenv)
 
     pip install -e .
     pip install -r requirements-test.txt

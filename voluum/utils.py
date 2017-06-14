@@ -1,8 +1,14 @@
+from datetime import datetime
+from datetime import timedelta
+
 try:
     from urllib.parse import quote_plus
 except ImportError:
     # python 2.7
     from urllib import quote_plus
+
+VOLUUM_EMAIL = 'user@example.com'
+VOLUUM_PASSWORD = 'notasecret'
 
 
 class VoluumException(Exception):
@@ -27,3 +33,19 @@ def build_query_str(columns):
     query_str = map(lambda x: 'columns={}'.format(
                     quote_plus(str(x).encode('utf-8'))), columns)
     return '&'.join(query_str)
+
+
+def round_time(dt=None, round_to=60):
+    """
+    Round datetime object to nearest hour
+    https://stackoverflow.com/questions/3463930
+    Result datetime should be formatted like below
+    before sending to Voluum  API
+        round_time(self.to_date).strftime('%Y-%m-%dT%H')
+    """
+    if dt is None:
+        dt = datetime.now()
+
+    seconds = (dt.replace(tzinfo=None) - dt.min).seconds
+    rounding = (seconds + round_to / 2) // round_to * round_to
+    return dt + timedelta(0, rounding-seconds, -dt.microsecond)
