@@ -1,5 +1,9 @@
+import time
+
 from datetime import datetime
 from datetime import timedelta
+
+import requests
 
 try:
     from urllib.parse import quote_plus
@@ -19,6 +23,28 @@ class VoluumException(Exception):
     def __str__(self):
         return '{0}: {1}'.format(
             self.status_code, self.text)
+
+
+def fetch(method, url, sleep_time=1, **kwargs):
+    """
+    Fetch with retry on fail
+    http://docs.python-requests.org/en/master/api/#requests.request
+    """
+    HTTP_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD']
+
+    method = method.strip().upper()
+
+    if method.strip().upper() not in HTTP_METHODS:
+        raise ValueError('Invalid Http Method: {}'.format(method))
+
+    resp = requests.request(method, url, **kwargs)
+
+    if resp.status_code != 200:
+        if 'NUMBER_OF_REQUEST_FOR_IP_EXCEEDED' in resp.text:
+            time.sleep(sleep_time)
+        resp = fetch(url, method, sleep_time=sleep_time * 2, **kwargs)
+
+    return resp
 
 
 def build_query_str(columns):
