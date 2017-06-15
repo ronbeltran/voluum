@@ -42,7 +42,7 @@ def fetch(method, url, sleep_time=1, **kwargs):
     if resp.status_code != 200:
         if 'NUMBER_OF_REQUEST_FOR_IP_EXCEEDED' in resp.text:
             time.sleep(sleep_time)
-        resp = fetch(url, method, sleep_time=sleep_time * 2, **kwargs)
+        resp = fetch(method, url, sleep_time=sleep_time * 2, **kwargs)
 
     return resp
 
