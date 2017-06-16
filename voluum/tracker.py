@@ -54,3 +54,30 @@ class Tracker:
             raise VoluumException(resp.status_code, resp.text)
 
         return resp.json()
+
+    def get_offers(self, include_deleted=None, fields=None):
+        """
+        GET /offer
+        """
+        from . import VOLUUM_API
+
+        url = VOLUUM_API + '/offer'
+
+        if fields is None:
+            fields = ''
+        elif isinstance(fields, (str, unicode)):
+            fields = fields.strip().split(',')
+
+        params = {
+            'fields': fields,
+        }
+
+        if include_deleted is not None:
+            params.update({'includeDeleted': bool(include_deleted)})
+
+        resp = fetch('GET', url, params=params, headers=self.headers())
+
+        if resp.status_code != 200:
+            raise VoluumException(resp.status_code, resp.text)
+
+        return resp.json()
