@@ -23,7 +23,7 @@ class Tracker:
 
         resp = fetch('GET', url, headers=self.headers())
 
-        if resp.status_code != 200:
+        if resp.status_code not in [200, 404]:
             raise VoluumException(resp.status_code, resp.text)
 
         return resp.json()
