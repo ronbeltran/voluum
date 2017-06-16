@@ -61,3 +61,26 @@ class TrackerTestCase(BaseTestCase):
 
         self.assertEqual(self.campaign_id, resp['id'])
         self.assertEqual('Campaign Name', resp['name'])
+
+    @responses.activate
+    def test_get_campaign_404(self):
+        body = {
+            "error": {
+                "code": "NOT_FOUND",
+                "description": "Resource with ID {id} was not found on this server",
+                "messages": [],
+                "webRequestId": "req-V0IEU72cSWAKrzZH4q3m",
+                "time": "2017-06-16T10:22:27.268+0000"
+            }
+        }
+
+        responses.add(
+            responses.GET, self.voluum_api + '/campaign/' + self.campaign_id,
+            content_type='application/json; charset=utf-8',
+            json=body, status=404)
+
+        resp = self.tracker.get_campaign(self.campaign_id)
+
+        error = resp['error']
+
+        self.assertEqual('NOT_FOUND', error['code'])
