@@ -1,0 +1,19 @@
+{
+  "affiliateNetworks": [
+      {
+        "id": "8c5e2e8b-f9e7-4385-a266-7c3de1eb2c44",
+        "name": "Network1",
+        "deleted": false
+      },
+      {
+        "id": "8c5e2e8b-f9e7-4385-a266-7c3de1eb2c45",
+        "name": "Network2",
+        "deleted": false
+      },
+      {
+        "id": "8c5e2e8b-f9e7-4385-a266-7c3de1eb2c46",
+        "name": "Network3",
+        "deleted": false
+      }
+    ]
+}

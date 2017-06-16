@@ -2,25 +2,20 @@ import time
 import json
 from datetime import datetime
 from datetime import timedelta
-import unittest
 import responses
 
-from voluum import VOLUUM_API
 from voluum.security import Security
 from voluum.utils import VoluumException
-from voluum.utils import VOLUUM_EMAIL
-from voluum.utils import VOLUUM_PASSWORD
+
+from . import BaseTestCase
 
 
-class SecurityTestCase(unittest.TestCase):
+class SecurityTestCase(BaseTestCase):
     def setUp(self):
-        self.email = VOLUUM_EMAIL
-        self.password = VOLUUM_PASSWORD
+        super(SecurityTestCase, self).setUp()
         self.security = Security(self.email, self.password)
         self.security2 = Security(self.email, self.password + '_')
-        self.url = VOLUUM_API
         self.now = datetime.now() + timedelta(hours=1)
-        self.token = "zZ4J8z6Z5EC5lDDDEAxgnw_kb_qWgkxQ"
 
     @responses.activate
     def test_get_token(self):
@@ -30,7 +25,7 @@ class SecurityTestCase(unittest.TestCase):
             "inaugural": False,
         }
         responses.add(
-            responses.POST, self.url + '/auth/session',
+            responses.POST, self.voluum_api + '/auth/session',
             content_type='application/json; charset=utf-8',
             json=body, status=200)
         resp = self.security.get_token()
@@ -59,7 +54,7 @@ class SecurityTestCase(unittest.TestCase):
         }
 
         responses.add(
-            responses.POST, self.url + '/auth/session',
+            responses.POST, self.voluum_api + '/auth/session',
             content_type='application/json; charset=utf-8',
             body=VoluumException(401, json.dumps(body)), status=401)
 
@@ -82,7 +77,7 @@ class SecurityTestCase(unittest.TestCase):
         }
 
         responses.add(
-            responses.GET, self.url + '/auth/session',
+            responses.GET, self.voluum_api + '/auth/session',
             content_type='application/json; charset=utf-8',
             json=body, status=200)
 
@@ -101,7 +96,7 @@ class SecurityTestCase(unittest.TestCase):
         }
 
         responses.add(
-            responses.GET, self.url + '/auth/session',
+            responses.GET, self.voluum_api + '/auth/session',
             content_type='application/json; charset=utf-8',
             json=body, status=200)
 
@@ -114,7 +109,7 @@ class SecurityTestCase(unittest.TestCase):
     def test_delete_session(self):
         # delete session
         responses.add(
-            responses.DELETE, self.url + '/auth/session',
+            responses.DELETE, self.voluum_api + '/auth/session',
             content_type='application/json; charset=utf-8',
             body='', status=200)
 
@@ -125,7 +120,7 @@ class SecurityTestCase(unittest.TestCase):
     def test_delete_session_with_expired_token(self):
         # delete session
         responses.add(
-            responses.DELETE, self.url + '/auth/session',
+            responses.DELETE, self.voluum_api + '/auth/session',
             content_type='application/json; charset=utf-8',
             body=VoluumException(400, ''), status=400)
 

@@ -1,0 +1,58 @@
+{
+  "id": "",
+  "name": "Campaign Name",
+  "namePostfix": "281569:topic-Test Seed",
+  "createdTime": "2017-06-15T03:58:55.499Z",
+  "updatedTime": "2017-06-15T03:58:55.499Z",
+  "deleted": false,
+  "url": "",
+  "impressionUrl": "",
+  "costModel": {
+    "type": "CPC",
+    "value": 0.04
+  },
+  "revenueModel": {
+    "type": "RPA_AUTO"
+  },
+  "country": {
+    "code": "US",
+    "name": "United States"
+  },
+  "trafficSource": {
+    "id": ""
+  },
+  "redirectTarget": {
+    "inlineFlow": {
+      "name": "Campaign Name - inline flow",
+      "deleted": false,
+      "countries": [
+        {
+          "code": "US",
+          "name": "United States"
+        }
+      ],
+      "defaultPaths": [
+        {
+          "name": "Path 1",
+          "active": true,
+          "weight": 100,
+          "landers": [],
+          "offers": [
+            {
+              "weight": 100,
+              "offer": {
+                "id": "1f02e4eb-9783-444c-ae9a-581877d02781"
+              }
+            }
+          ],
+          "offerRedirectMode": "REGULAR",
+          "realtimeRoutingApiState": "DISABLED"
+        }
+      ],
+      "conditionalPathsGroups": [],
+      "defaultOfferRedirectMode": "REGULAR",
+      "realtimeRoutingApi": "DISABLED"
+    }
+  },
+  "tags": []
+}
