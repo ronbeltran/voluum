@@ -55,9 +55,4 @@ class Reports:
         if columns:
             url = url + '?' + build_query_str(columns)
 
-        resp = fetch('GET', url, params=params, headers=self.headers())
-
-        if resp.status_code != 200:
-            raise VoluumException(resp.status_code, resp.text)
-
-        return resp.json()
+        return fetch('GET', url, params=params, headers=self.headers())
