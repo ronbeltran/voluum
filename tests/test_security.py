@@ -28,11 +28,16 @@ class SecurityTestCase(BaseTestCase):
             responses.POST, self.voluum_api + '/auth/session',
             content_type='application/json; charset=utf-8',
             json=body, status=200)
+
         resp = self.security.get_token()
-        self.assertIsNotNone(resp)
-        self.assertEqual(self.token, resp['token'])
-        self.assertEqual(False, resp['inaugural'])
-        self.assertIn('expirationTimestamp', resp)
+        r = resp.json()
+
+        self.assertEqual(200, resp.status_code)
+
+        self.assertIsNotNone(r)
+        self.assertEqual(self.token, r['token'])
+        self.assertEqual(False, r['inaugural'])
+        self.assertIn('expirationTimestamp', r)
 
     @responses.activate
     def test_get_token_wrong_credentials(self):
@@ -82,11 +87,14 @@ class SecurityTestCase(BaseTestCase):
             json=body, status=200)
 
         resp = self.security.get_session(self.token)
-        self.assertIsNotNone(resp)
-        self.assertTrue(resp['alive'])
-        self.assertEqual(False, resp['inaugural'])
-        self.assertIn('expirationTimestamp', resp)
-        self.assertIn('time', resp)
+        r = resp.json()
+
+        self.assertEqual(200, resp.status_code)
+        self.assertIsNotNone(r)
+        self.assertTrue(r['alive'])
+        self.assertEqual(False, r['inaugural'])
+        self.assertIn('expirationTimestamp', r)
+        self.assertIn('time', r)
 
     @responses.activate
     def test_get_session_with_expired_token(self):
@@ -101,9 +109,12 @@ class SecurityTestCase(BaseTestCase):
             json=body, status=200)
 
         resp = self.security.get_session(self.token)
-        self.assertIsNotNone(resp)
-        self.assertFalse(resp['alive'])
-        self.assertIn('time', resp)
+        r = resp.json()
+
+        self.assertEqual(200, resp.status_code)
+        self.assertIsNotNone(r)
+        self.assertFalse(r['alive'])
+        self.assertIn('time', r)
 
     @responses.activate
     def test_delete_session(self):
@@ -114,7 +125,9 @@ class SecurityTestCase(BaseTestCase):
             body='', status=200)
 
         resp = self.security.delete_session(self.token)
-        self.assertEqual(resp, '')
+
+        self.assertEqual(200, resp.status_code)
+        self.assertEqual(resp.text, '')
 
     @responses.activate
     def test_delete_session_with_expired_token(self):
