@@ -1,4 +1,3 @@
-from voluum.utils import VoluumException
 from voluum.utils import fetch
 
 
@@ -21,12 +20,7 @@ class Tracker:
 
         url = VOLUUM_API + '/campaign/' + campaign_id
 
-        resp = fetch('GET', url, headers=self.headers())
-
-        if resp.status_code not in [200, 404]:
-            raise VoluumException(resp.status_code, resp.text)
-
-        return resp.json()
+        return fetch('GET', url, headers=self.headers())
 
     def get_affiliate_networks(self, include_deleted=None, fields=None):
         """
@@ -48,12 +42,7 @@ class Tracker:
         if include_deleted is not None:
             params.update({'includeDeleted': bool(include_deleted)})
 
-        resp = fetch('GET', url, params=params, headers=self.headers())
-
-        if resp.status_code != 200:
-            raise VoluumException(resp.status_code, resp.text)
-
-        return resp.json()
+        return fetch('GET', url, params=params, headers=self.headers())
 
     def get_offers(self, include_deleted=None, fields=None):
         """
@@ -75,9 +64,4 @@ class Tracker:
         if include_deleted is not None:
             params.update({'includeDeleted': bool(include_deleted)})
 
-        resp = fetch('GET', url, params=params, headers=self.headers())
-
-        if resp.status_code != 200:
-            raise VoluumException(resp.status_code, resp.text)
-
-        return resp.json()
+        return fetch('GET', url, params=params, headers=self.headers())

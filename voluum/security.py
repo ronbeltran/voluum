@@ -1,6 +1,5 @@
 import json
 
-from voluum.utils import VoluumException
 from voluum.utils import fetch
 
 
@@ -26,13 +25,8 @@ class Security:
             'password': self.password,
         }
 
-        resp = fetch(
-            'POST', url, data=json.dumps(data), headers=self.headers())
-
-        if resp.status_code != 200:
-            raise VoluumException(resp.status_code, resp.text)
-
-        return resp.json()
+        return fetch('POST', url, data=json.dumps(data),
+                     headers=self.headers())
 
     def get_session(self, token):
         """ GET /auth/session """
@@ -45,12 +39,7 @@ class Security:
             'cwauth-token': token,
         })
 
-        resp = fetch('GET', url, headers=headers)
-
-        if resp.status_code != 200:
-            raise VoluumException(resp.status_code, resp.text)
-
-        return resp.json()
+        return fetch('GET', url, headers=headers)
 
     def delete_session(self, token):
         """ DELETE /auth/session """
@@ -63,9 +52,4 @@ class Security:
             'cwauth-token': token,
         })
 
-        resp = fetch('DELETE', url, headers=headers)
-
-        if resp.status_code != 200:
-            raise VoluumException(resp.status_code, resp.text)
-
-        return resp.text
+        return fetch('DELETE', url, headers=headers)

@@ -1,11 +1,9 @@
 import time
-import json
 from datetime import datetime
 from datetime import timedelta
 import responses
 
 from voluum.security import Security
-from voluum.utils import VoluumException
 
 from . import BaseTestCase
 
@@ -28,11 +26,16 @@ class SecurityTestCase(BaseTestCase):
             responses.POST, self.voluum_api + '/auth/session',
             content_type='application/json; charset=utf-8',
             json=body, status=200)
+
         resp = self.security.get_token()
-        self.assertIsNotNone(resp)
-        self.assertEqual(self.token, resp['token'])
-        self.assertEqual(False, resp['inaugural'])
-        self.assertIn('expirationTimestamp', resp)
+        r = resp.json()
+
+        self.assertEqual(200, resp.status_code)
+
+        self.assertIsNotNone(r)
+        self.assertEqual(self.token, r['token'])
+        self.assertEqual(False, r['inaugural'])
+        self.assertIn('expirationTimestamp', r)
 
     @responses.activate
     def test_get_token_wrong_credentials(self):
@@ -56,16 +59,14 @@ class SecurityTestCase(BaseTestCase):
         responses.add(
             responses.POST, self.voluum_api + '/auth/session',
             content_type='application/json; charset=utf-8',
-            body=VoluumException(401, json.dumps(body)), status=401)
+            json=body, status=401)
 
-        # get reference to the exception as `excp`
-        with self.assertRaises(VoluumException) as excp:
-            self.security2.get_token()
+        resp = self.security2.get_token()
+        self.assertEqual(resp.status_code, 401)
 
-        # assert exception contents
-        excp_contents = excp.exception
-        self.assertEqual(excp_contents.status_code, 401)
-        self.assertEqual(excp_contents.text, json.dumps(body))
+        r = resp.json()
+        error = r['error']
+        self.assertEqual('BAD_CREDENTIALS', error['code'])
 
     @responses.activate
     def test_get_session(self):
@@ -82,11 +83,14 @@ class SecurityTestCase(BaseTestCase):
             json=body, status=200)
 
         resp = self.security.get_session(self.token)
-        self.assertIsNotNone(resp)
-        self.assertTrue(resp['alive'])
-        self.assertEqual(False, resp['inaugural'])
-        self.assertIn('expirationTimestamp', resp)
-        self.assertIn('time', resp)
+        r = resp.json()
+
+        self.assertEqual(200, resp.status_code)
+        self.assertIsNotNone(r)
+        self.assertTrue(r['alive'])
+        self.assertEqual(False, r['inaugural'])
+        self.assertIn('expirationTimestamp', r)
+        self.assertIn('time', r)
 
     @responses.activate
     def test_get_session_with_expired_token(self):
@@ -101,9 +105,12 @@ class SecurityTestCase(BaseTestCase):
             json=body, status=200)
 
         resp = self.security.get_session(self.token)
-        self.assertIsNotNone(resp)
-        self.assertFalse(resp['alive'])
-        self.assertIn('time', resp)
+        r = resp.json()
+
+        self.assertEqual(200, resp.status_code)
+        self.assertIsNotNone(r)
+        self.assertFalse(r['alive'])
+        self.assertIn('time', r)
 
     @responses.activate
     def test_delete_session(self):
@@ -114,7 +121,9 @@ class SecurityTestCase(BaseTestCase):
             body='', status=200)
 
         resp = self.security.delete_session(self.token)
-        self.assertEqual(resp, '')
+
+        self.assertEqual(200, resp.status_code)
+        self.assertEqual(resp.text, '')
 
     @responses.activate
     def test_delete_session_with_expired_token(self):
@@ -122,13 +131,8 @@ class SecurityTestCase(BaseTestCase):
         responses.add(
             responses.DELETE, self.voluum_api + '/auth/session',
             content_type='application/json; charset=utf-8',
-            body=VoluumException(400, ''), status=400)
+            body='', status=400)
 
-        # get reference to the exception as `excp`
-        with self.assertRaises(VoluumException) as excp:
-            self.security.delete_session(self.token)
-
-        # assert exception contents
-        excp_contents = excp.exception
-        self.assertEqual(excp_contents.status_code, 400)
-        self.assertEqual(excp_contents.text, '')
+        resp = self.security.delete_session(self.token)
+        self.assertEqual(400, resp.status_code)
+        self.assertEqual('', resp.text)

@@ -33,8 +33,12 @@ class ReportsTestCase(BaseTestCase):
             round_time(self.to_date).strftime('%Y-%m-%dT%H'),
             group_by, filter_query=filter_query)
 
-        self.assertEqual(1, resp['totalRows'])
-        row = resp['rows'][0]
+        self.assertEqual(200, resp.status_code)
+
+        r = resp.json()
+
+        self.assertEqual(1, r['totalRows'])
+        row = r['rows'][0]
         self.assertEqual(self.campaign_id, row['campaignId'])
         self.assertEqual('My Campaign', row['campaignName'])
         self.assertEqual('ACTIVE', row['biddingStatus'])
