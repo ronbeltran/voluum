@@ -1,5 +1,4 @@
 from voluum.utils import build_query_str
-from voluum.utils import VoluumException
 from voluum.utils import fetch
 
 

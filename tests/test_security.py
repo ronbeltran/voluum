@@ -1,11 +1,9 @@
 import time
-import json
 from datetime import datetime
 from datetime import timedelta
 import responses
 
 from voluum.security import Security
-from voluum.utils import VoluumException
 
 from . import BaseTestCase
 
@@ -61,16 +59,14 @@ class SecurityTestCase(BaseTestCase):
         responses.add(
             responses.POST, self.voluum_api + '/auth/session',
             content_type='application/json; charset=utf-8',
-            body=VoluumException(401, json.dumps(body)), status=401)
+            json=body, status=401)
 
-        # get reference to the exception as `excp`
-        with self.assertRaises(VoluumException) as excp:
-            self.security2.get_token()
+        resp = self.security2.get_token()
+        self.assertEqual(resp.status_code, 401)
 
-        # assert exception contents
-        excp_contents = excp.exception
-        self.assertEqual(excp_contents.status_code, 401)
-        self.assertEqual(excp_contents.text, json.dumps(body))
+        r = resp.json()
+        error = r['error']
+        self.assertEqual('BAD_CREDENTIALS', error['code'])
 
     @responses.activate
     def test_get_session(self):
@@ -135,13 +131,8 @@ class SecurityTestCase(BaseTestCase):
         responses.add(
             responses.DELETE, self.voluum_api + '/auth/session',
             content_type='application/json; charset=utf-8',
-            body=VoluumException(400, ''), status=400)
+            body='', status=400)
 
-        # get reference to the exception as `excp`
-        with self.assertRaises(VoluumException) as excp:
-            self.security.delete_session(self.token)
-
-        # assert exception contents
-        excp_contents = excp.exception
-        self.assertEqual(excp_contents.status_code, 400)
-        self.assertEqual(excp_contents.text, '')
+        resp = self.security.delete_session(self.token)
+        self.assertEqual(400, resp.status_code)
+        self.assertEqual('', resp.text)

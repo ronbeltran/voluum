@@ -1,4 +1,3 @@
-from voluum.utils import VoluumException
 from voluum.utils import fetch
 
 
