@@ -1,3 +1,4 @@
+import json
 from voluum.utils import fetch
 
 
@@ -8,6 +9,7 @@ class Tracker:
 
     def headers(self):
         return {
+            'Content-Type': 'application/json; charset=utf-8',
             'Accept': 'application/json',
             'cwauth-token': self.token,
         }
@@ -21,6 +23,16 @@ class Tracker:
         url = VOLUUM_API + '/campaign/' + campaign_id
 
         return fetch('GET', url, headers=self.headers())
+
+    def create_campaign(self, payload):
+        """
+        POST /campaign
+        """
+        from . import VOLUUM_API
+
+        url = VOLUUM_API + '/campaign'
+        return fetch('POST', url, data=json.dumps(payload),
+                     headers=self.headers())
 
     def get_affiliate_networks(self, include_deleted=None, fields=None):
         """
