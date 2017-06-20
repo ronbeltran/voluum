@@ -1,3 +1,5 @@
+import json
+
 from voluum.utils import build_query_str
 from voluum.utils import fetch
 
@@ -9,6 +11,7 @@ class Reports:
 
     def headers(self):
         return {
+            'Content-Type': 'application/json; charset=utf-8',
             'Accept': 'application/json',
             'cwauth-token': self.token,
         }
@@ -55,3 +58,13 @@ class Reports:
             url = url + '?' + build_query_str(columns)
 
         return fetch('GET', url, params=params, headers=self.headers())
+
+    def manual_costs(self, payload):
+        """
+        POST /report/manual-cost
+        """
+        from . import VOLUUM_API
+
+        url = VOLUUM_API + '/report/manual-cost'
+        return fetch('POST', url, data=json.dumps(payload),
+                     headers=self.headers())
