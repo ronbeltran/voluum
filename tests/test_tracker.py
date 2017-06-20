@@ -79,7 +79,7 @@ class TrackerTestCase(BaseTestCase):
         body = {
             "error": {
                 "code": "NOT_FOUND",
-                "description": "Resource with ID {id} was not found on this server",
+                "description": "Resource with ID {id} was not found on this server",  # noqa
                 "messages": [],
                 "webRequestId": "req-V0IEU72cSWAKrzZH4q3m",
                 "time": "2017-06-16T10:22:27.268+0000"
@@ -100,3 +100,22 @@ class TrackerTestCase(BaseTestCase):
         error = r['error']
 
         self.assertEqual('NOT_FOUND', error['code'])
+
+    @responses.activate
+    def test_create_campaign(self):
+        body = json.loads(self.read_file('create_campaign.json'))
+        body['id'] = self.campaign_id  # patch campaign_id
+
+        responses.add(
+            responses.POST, self.voluum_api + '/campaign',
+            content_type='application/json; charset=utf-8',
+            json=body, status=200)
+
+        resp = self.tracker.create_campaign(body)
+
+        self.assertEqual(200, resp.status_code)
+
+        r = resp.json()
+
+        self.assertEqual('My Campaign', r['name'])
+        self.assertEqual(self.campaign_id, r['id'])
