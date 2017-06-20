@@ -1,9 +1,9 @@
 {
-  "id": "",
-  "name": "Campaign Name",
+  "id": null,
+  "name": "My Campaign",
   "namePostfix": "",
-  "createdTime": "2017-06-15T03:58:55.499Z",
-  "updatedTime": "2017-06-15T03:58:55.499Z",
+  "createdTime": "2017-06-20T07:47:14.261Z",
+  "updatedTime": "2017-06-20T07:47:14.261Z",
   "deleted": false,
   "url": "",
   "impressionUrl": "",
@@ -15,25 +15,21 @@
     "type": "RPA_AUTO"
   },
   "country": {
-    "code": "US",
-    "name": "United States"
+    "code": "AL",
+    "name": "Albania"
   },
   "trafficSource": {
     "id": ""
   },
   "redirectTarget": {
     "inlineFlow": {
-      "name": "Campaign Name - inline flow",
+      "name": "",
       "deleted": false,
-      "countries": [
-        {
-          "code": "US",
-          "name": "United States"
-        }
-      ],
+      "countries": [],
       "defaultPaths": [
         {
-          "name": "Path 1",
+          "id": "",
+          "name": "",
           "active": true,
           "weight": 100,
           "landers": [],
@@ -48,10 +44,7 @@
           "offerRedirectMode": "REGULAR",
           "realtimeRoutingApiState": "DISABLED"
         }
-      ],
-      "conditionalPathsGroups": [],
-      "defaultOfferRedirectMode": "REGULAR",
-      "realtimeRoutingApi": "DISABLED"
+      ]
     }
   },
   "tags": []
