@@ -1,9 +1,13 @@
 import json
+import logging
 
 from voluum.utils import build_query_str
 from voluum.utils import fetch
 from voluum.utils import round_time
+from voluum.utils import slice_date_ranges
 from voluum.utils import VoluumException
+
+logger = logging.getLogger(__name__)
 
 
 class Reports:
@@ -32,6 +36,7 @@ class Reports:
           - ALL
           - TRAFFIC
         """
+        logger.info('reports:get_report()')
         from . import VOLUUM_API
 
         url = VOLUUM_API + '/report'
@@ -43,28 +48,48 @@ class Reports:
                 'epv', 'epc', 'ap', 'errors',
             ]
 
-        params = {
-            'from': round_time(from_date).strftime('%Y-%m-%dT%H'),
-            'to': round_time(to_date).strftime('%Y-%m-%dT%H'),
-            'groupBy': group_by,
-            'filter': filter_query,
-            'direction': direction,
-            'sort': sort,
-            'tz': tz,
-            'limit': limit,
-            'offset': offset,
-            'include': include,
-        }
+        date_ranges = [(from_date, to_date)]
 
-        if columns:
-            url = url + '?' + build_query_str(columns)
+        if (to_date - from_date).days > 31:
+            date_ranges = slice_date_ranges(from_date, to_date)
+            logger.info('time range too long')
 
-        resp = fetch('GET', url, params=params, headers=self.headers())
+        logger.debug(date_ranges)
 
-        if resp.status_code == 200:
-            return resp.json()
-        else:
-            raise VoluumException(resp.status_code, resp.text)
+        resp_json = None
+
+        for dr in date_ranges:
+
+            params = {
+                'from': round_time(dr[0]).strftime('%Y-%m-%dT%H'),
+                'to': round_time(dr[1]).strftime('%Y-%m-%dT%H'),
+                'groupBy': group_by,
+                'filter': filter_query,
+                'direction': direction,
+                'sort': sort,
+                'tz': tz,
+                'limit': limit,
+                'offset': offset,
+                'include': include,
+            }
+
+            if columns:
+                url = url + '?' + build_query_str(columns)
+
+            logger.debug(url)
+            logger.debug(params)
+            resp = fetch('GET', url, params=params, headers=self.headers())
+
+            if resp.status_code == 200:
+                if resp_json is None:
+                    resp_json = resp.json()
+                else:
+                    resp_json['rows'] += resp.json()['rows']
+            else:
+                raise VoluumException(resp.status_code, resp.text)
+
+        logger.debug(resp_json)
+        return resp_json
 
     def manual_costs(self, payload):
         """
