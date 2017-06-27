@@ -5,7 +5,6 @@ from datetime import timedelta
 import responses
 
 from voluum.reports import Reports
-from voluum.utils import round_time
 
 from . import BaseTestCase
 
@@ -28,17 +27,13 @@ class ReportsTestCase(BaseTestCase):
 
         group_by = 'campaign'
         filter_query = self.campaign_id
+
         resp = self.reports.get_report(
-            round_time(self.from_date).strftime('%Y-%m-%dT%H'),
-            round_time(self.to_date).strftime('%Y-%m-%dT%H'),
+            self.from_date, self.to_date,
             group_by, filter_query=filter_query)
 
-        self.assertEqual(200, resp.status_code)
-
-        r = resp.json()
-
-        self.assertEqual(1, r['totalRows'])
-        row = r['rows'][0]
+        self.assertEqual(1, resp['totalRows'])
+        row = resp['rows'][0]
         self.assertEqual(self.campaign_id, row['campaignId'])
         self.assertEqual('My Campaign', row['campaignName'])
         self.assertEqual('ACTIVE', row['biddingStatus'])
