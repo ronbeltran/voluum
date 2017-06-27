@@ -1,5 +1,4 @@
 import json
-import datetime
 
 from voluum.utils import build_query_str
 from voluum.utils import fetch
