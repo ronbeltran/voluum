@@ -1,7 +1,10 @@
 import json
+import datetime
 
 from voluum.utils import build_query_str
 from voluum.utils import fetch
+from voluum.utils import round_time
+from voluum.utils import VoluumException
 
 
 class Reports:
@@ -42,8 +45,8 @@ class Reports:
             ]
 
         params = {
-            'from': from_date,
-            'to': to_date,
+            'from': round_time(from_date).strftime('%Y-%m-%dT%H'),
+            'to': round_time(to_date).strftime('%Y-%m-%dT%H'),
             'groupBy': group_by,
             'filter': filter_query,
             'direction': direction,
@@ -57,7 +60,12 @@ class Reports:
         if columns:
             url = url + '?' + build_query_str(columns)
 
-        return fetch('GET', url, params=params, headers=self.headers())
+        resp = fetch('GET', url, params=params, headers=self.headers())
+
+        if resp.status_code == 200:
+            return resp.json()
+        else:
+            raise VoluumException(resp.status_code, resp.text)
 
     def manual_costs(self, payload):
         """
