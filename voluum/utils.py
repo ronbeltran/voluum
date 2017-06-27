@@ -1,7 +1,6 @@
 import time
 
-from datetime import datetime
-from datetime import timedelta
+import datetime
 
 import requests
 
@@ -68,8 +67,25 @@ def round_time(dt=None, round_to=60):
         round_time(self.to_date).strftime('%Y-%m-%dT%H')
     """
     if dt is None:
-        dt = datetime.now()
+        dt = datetime.datetime.now()
 
     seconds = (dt.replace(tzinfo=None) - dt.min).seconds
     rounding = (seconds + round_to / 2) // round_to * round_to
-    return dt + timedelta(0, rounding-seconds, -dt.microsecond)
+    return dt + datetime.timedelta(0, rounding-seconds, -dt.microsecond)
+
+
+def slice_date_ranges(start, end, step=31):
+    dates = []
+    days = (end - start).days + 1
+
+    from_date = None
+    to_date = None
+
+    for i in range(0, days, step):
+        from_date = start + datetime.timedelta(i)
+        to_date = from_date + datetime.timedelta(step-1)
+        if to_date > end:
+            to_date = end
+        dates.append((from_date, to_date))
+
+    return dates
