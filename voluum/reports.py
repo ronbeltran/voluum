@@ -39,7 +39,7 @@ class Reports:
         logger.info('reports:get_report()')
         from . import VOLUUM_API
 
-        url = VOLUUM_API + '/report'
+        root_url = VOLUUM_API + '/report'
 
         if columns is None:
             columns = [
@@ -74,10 +74,11 @@ class Reports:
             }
 
             if columns:
-                url = url + '?' + build_query_str(columns)
+                url = root_url + '?' + build_query_str(columns)
 
-            logger.debug(url)
-            logger.debug(params)
+            logger.debug('url: {}'.format(url))
+            logger.debug('params: {}'.format(params))
+
             resp = fetch('GET', url, params=params, headers=self.headers())
 
             if resp.status_code == 200:
@@ -85,9 +86,12 @@ class Reports:
                     resp_json = resp.json()
                 else:
                     resp_json['rows'] += resp.json()['rows']
+                logger.debug('totalRows: {}'.format(resp_json['totalRows']))
+                logger.debug('offset: {}'.format(resp_json['offset']))
             else:
                 raise VoluumException(resp.status_code, resp.text)
 
+        logger.debug('rows: {}'.format(len(resp_json['rows'])))
         return resp_json
 
     def manual_costs(self, payload):
