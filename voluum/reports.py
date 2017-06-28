@@ -45,7 +45,7 @@ class Reports:
             columns = [
                 'campaign', 'campaignName', 'visits', 'clicks', 'conversions',
                 'revenue', 'cost', 'profit', 'cpv', 'ctr', 'cr', 'cv', 'roi',
-                'epv', 'epc', 'ap', 'errors',
+                'epv', 'epc', 'ap', 'errors', 'campaignId',
             ]
 
         date_ranges = [(from_date, to_date)]
