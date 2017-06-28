@@ -88,7 +88,6 @@ class Reports:
             else:
                 raise VoluumException(resp.status_code, resp.text)
 
-        logger.debug(resp_json)
         return resp_json
 
     def manual_costs(self, payload):
