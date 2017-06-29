@@ -42,11 +42,7 @@ class Reports:
         root_url = VOLUUM_API + '/report'
 
         if columns is None:
-            columns = [
-                'campaign', 'campaignName', 'visits', 'clicks', 'conversions',
-                'revenue', 'cost', 'profit', 'cpv', 'ctr', 'cr', 'cv', 'roi',
-                'epv', 'epc', 'ap', 'errors', 'campaignId',
-            ]
+            columns = ['campaign']
 
         date_ranges = [(from_date, to_date)]
 
@@ -58,7 +54,9 @@ class Reports:
 
         resp_json = None
 
-        for dr in date_ranges:
+        for index, dr in enumerate(date_ranges):
+
+            logger.debug('{0}: from {1} to {2}'.format(index, dr[0], dr[1]))
 
             params = {
                 'from': round_time(dr[0]).strftime('%Y-%m-%dT%H'),
@@ -78,20 +76,25 @@ class Reports:
 
             logger.debug('url: {}'.format(url))
             logger.debug('params: {}'.format(params))
+            logger.debug('headers: {}'.format(self.headers()))
 
             resp = fetch('GET', url, params=params, headers=self.headers())
 
+            logger.debug('resp.url: {}'.format(resp.url))
+
             if resp.status_code == 200:
+
                 if resp_json is None:
                     resp_json = resp.json()
                 else:
                     resp_json['rows'] += resp.json()['rows']
+
                 logger.debug('totalRows: {}'.format(resp_json['totalRows']))
                 logger.debug('offset: {}'.format(resp_json['offset']))
+                logger.debug('rows: {}'.format(len(resp_json['rows'])))
             else:
                 raise VoluumException(resp.status_code, resp.text)
 
-        logger.debug('rows: {}'.format(len(resp_json['rows'])))
         return resp_json
 
     def manual_costs(self, payload):
