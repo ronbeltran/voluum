@@ -24,7 +24,8 @@ class Reports:
 
     def get_report(self, from_date, to_date, group_by, include='ACTIVE',
                    filter_query='', columns=None, direction='DESC',
-                   sort='visits', tz='Etc/GMT', limit=1000, offset=0):
+                   sort='visits', tz='Etc/GMT', limit=1000, offset=0,
+                   **kwargs):
         """
         GET /report
 
@@ -77,6 +78,10 @@ class Reports:
             logger.debug('url: {}'.format(url))
             logger.debug('params: {}'.format(params))
             logger.debug('headers: {}'.format(self.headers()))
+            logger.debug('kwargs: {}'.format(kwargs))
+
+            if kwargs:
+                params.update(kwargs)
 
             resp = fetch('GET', url, params=params, headers=self.headers())
 
