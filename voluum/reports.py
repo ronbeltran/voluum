@@ -1,5 +1,6 @@
 import json
 import logging
+from collections import Counter
 
 from voluum.utils import build_query_str
 from voluum.utils import fetch
@@ -93,6 +94,9 @@ class Reports:
                     resp_json = resp.json()
                 else:
                     resp_json['rows'] += resp.json()['rows']
+                    old_totals = resp_json['totals']
+                    new_totals = resp.json()['totals']
+                    resp_json['totals'] = dict(Counter(old_totals) + Counter(new_totals))
 
                 logger.debug('totalRows: {}'.format(resp_json['totalRows']))
                 logger.debug('offset: {}'.format(resp_json['offset']))
