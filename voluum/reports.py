@@ -43,8 +43,17 @@ class Reports:
 
         root_url = VOLUUM_API + '/report'
 
+        required_columns = [
+            'visits', 'clicks', 'conversions', 'revenue'
+            'cost', 'profit', 'cpv', 'ctr', 'cr', 'cv',
+            'roi', 'epv', 'epc', 'ap', 'errors', 'campaign',
+        ]
+
         if columns is None:
-            columns = ['campaign']
+            columns = required_columns
+        else:
+            required_columns.extend(columns)
+            columns = list(set(required_columns))
 
         date_ranges = [(from_date, to_date)]
 
