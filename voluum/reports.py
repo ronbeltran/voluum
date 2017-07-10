@@ -102,13 +102,15 @@ class Reports:
                 if resp_json is None:
                     resp_json = resp.json()
                 else:
-                    resp_json['rows'] += resp.json()['rows']
-                    resp_json['totalRows'] += resp.json()['totalRows']
+                    new_resp_json = resp.json()
+                    resp_json['rows'] += new_resp_json['rows']
+                    resp_json['totalRows'] += new_resp_json['totalRows']
                     old_totals = resp_json['totals']
-                    new_totals = resp.json()['totals']
+                    new_totals = new_resp_json['totals']
                     resp_json['totals'] = dict(Counter(old_totals) + Counter(new_totals))  # noqa
 
                 logger.debug('totalRows: {}'.format(resp_json['totalRows']))
+                logger.debug('totals: {}'.format(resp_json['totals']))
                 logger.debug('offset: {}'.format(resp_json['offset']))
                 logger.debug('rows: {}'.format(len(resp_json['rows'])))
             else:
