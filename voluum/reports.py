@@ -103,11 +103,15 @@ class Reports:
                     resp_json = resp.json()
                 else:
                     new_resp_json = resp.json()
+
                     resp_json['rows'] += new_resp_json['rows']
                     resp_json['totalRows'] += new_resp_json['totalRows']
+
                     old_totals = resp_json['totals']
                     new_totals = new_resp_json['totals']
-                    resp_json['totals'] = dict(Counter(old_totals) + Counter(new_totals))  # noqa
+
+                    for k, v in old_totals.items():
+                        resp_json['totals'][k] = v + new_totals[k]
 
                 logger.debug('totalRows: {}'.format(resp_json['totalRows']))
                 logger.debug('totals: {}'.format(resp_json['totals']))
