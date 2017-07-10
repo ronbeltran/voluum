@@ -1,4 +1,5 @@
 import time
+import pytz
 
 import datetime
 
@@ -67,7 +68,8 @@ def round_time(dt=None, round_to=60):
         round_time(self.to_date).strftime('%Y-%m-%dT%H')
     """
     if dt is None:
-        dt = datetime.datetime.now()
+        dt = datetime.datetime.now(pytz.timezone("UTC")).replace(
+            hour=0, minute=0, second=0, microsecond=0)
 
     seconds = (dt.replace(tzinfo=None) - dt.min).seconds
     rounding = (seconds + round_to / 2) // round_to * round_to
