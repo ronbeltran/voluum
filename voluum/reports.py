@@ -61,8 +61,8 @@ class Reports:
             logger.debug('{0}: from {1} to {2}'.format(index, dr[0], dr[1]))
 
             params = {
-                'from': round_time(dr[0]).strftime('%Y-%m-%dT%H'),
-                'to': round_time(dr[1]).strftime('%Y-%m-%dT%H'),
+                'from': round_time(dr[0]).strftime("%Y-%m-%dT%H:%M:%S"),
+                'to': round_time(dr[1]).strftime("%Y-%m-%dT%H:%M:%S"),
                 'groupBy': group_by,
                 'filter': filter_query,
                 'direction': direction,
