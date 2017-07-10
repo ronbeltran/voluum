@@ -46,7 +46,7 @@ class Reports:
         required_columns = [
             'visits', 'clicks', 'conversions', 'revenue',
             'cost', 'profit', 'cpv', 'ctr', 'cr', 'cv',
-            'roi', 'epv', 'epc', 'ap', 'errors', 'campaign',
+            'roi', 'epv', 'epc', 'ap', 'errors',
         ]
 
         if columns is None:
