@@ -94,9 +94,10 @@ class Reports:
                     resp_json = resp.json()
                 else:
                     resp_json['rows'] += resp.json()['rows']
+                    resp_json['totalRows'] += resp.json()['totalRows']
                     old_totals = resp_json['totals']
                     new_totals = resp.json()['totals']
-                    resp_json['totals'] = dict(Counter(old_totals) + Counter(new_totals))
+                    resp_json['totals'] = dict(Counter(old_totals) + Counter(new_totals))  # noqa
 
                 logger.debug('totalRows: {}'.format(resp_json['totalRows']))
                 logger.debug('offset: {}'.format(resp_json['offset']))
