@@ -44,7 +44,7 @@ class Reports:
         root_url = VOLUUM_API + '/report'
 
         required_columns = [
-            'visits', 'clicks', 'conversions', 'revenue'
+            'visits', 'clicks', 'conversions', 'revenue',
             'cost', 'profit', 'cpv', 'ctr', 'cr', 'cv',
             'roi', 'epv', 'epc', 'ap', 'errors', 'campaign',
         ]
