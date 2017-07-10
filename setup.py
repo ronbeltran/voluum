@@ -9,5 +9,7 @@ setup(name='voluum',
       url='https://github.com/ronbeltran/voluum',
       packages=['voluum'],
       include_package_data=True,
-      install_requires=['requests'],
-      )
+      install_requires=[
+          'requests>=2.0',
+          'pytz>=2016.10',
+      ])
