@@ -3,5 +3,6 @@
 *.egg-info
 .tox
 dist
+build
 postactivate
 venv
